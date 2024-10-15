@@ -175,7 +175,7 @@ class System(object):
     @property
     def is_token_valid(self):
         """ If the alarm system is active or not. """
-        return self.__api.is_logged_in
+        return self.__api.is_logged_in()
 
     @property
     def session_token(self):
