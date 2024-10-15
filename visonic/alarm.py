@@ -141,6 +141,9 @@ class System(object):
     __system_alarm = False
     __system_devices = []
 
+    __wakeup_sms = None
+    __wakeup_sms_number = None
+
     def __init__(self, hostname, app_id, user_code, user_email, user_password, panel_id, partition):
         """ Initiate the connection to the Visonic API """
         self.__api = API(hostname, app_id, user_code, user_email, user_password, panel_id, partition)
@@ -191,7 +194,17 @@ class System(object):
     def devices(self):
         """ A list of devices connected to the alarm system and their state. """
         return self.__system_devices
+    
+    @property
+    def wakeup_sms(self):
+        """ SMS text to be sent in order to connect to the panel. """
+        return self.__wakeup_sms
 
+    @property
+    def wakeup_sms_number(self):
+        """ Phone number where you need to SMS text to to be sent in order to connect to the panel. """
+        return self.__wakeup_sms_number
+    
     def get_device_by_id(self, id):
         """ Get a device by its ID. """
         for device in self.__system_devices:
@@ -455,6 +468,14 @@ class System(object):
                             partitions=device['partitions']
                         )
                         self.__system_devices.append(generic_device)
+
+    def update_wakeup_sms(self):
+        """ Update all variables that are populated by the call
+        to the get_wakeup_sms() API method. """
+        wakeup_sms = self.__api.get_wakeup_sms()
+
+        self.__wakeup_sms = wakeup_sms["sms"]
+        self.__wakeup_sms_number = wakeup_sms["phone"]
 
 
 class API(object):
